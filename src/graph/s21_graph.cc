@@ -7,7 +7,10 @@ Graph::Graph(size_t amount_of_vertices)
 Graph::Graph(const Graph& other) : adj_matrix(other.adj_matrix) {}
 Graph::Graph(Graph&& other) : adj_matrix(std::move(other.adj_matrix)) {}
 
-Graph& Graph::operator=(const Graph& other) { adj_matrix = other.adj_matrix; }
+Graph& Graph::operator=(const Graph& other) {
+  adj_matrix = other.adj_matrix;
+  return *this;
+}
 
 void Graph::add_edge(size_t i, size_t j) {
   adj_matrix(i, j) = 1;
