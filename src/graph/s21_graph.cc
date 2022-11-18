@@ -2,9 +2,12 @@
 
 #include <fstream>
 
-Graph::Graph(size_t amount_of_vertices) {
-  adj_matrix = S21Matrix(amount_of_vertices, amount_of_vertices);
-}
+Graph::Graph(size_t amount_of_vertices)
+    : adj_matrix(S21Matrix(amount_of_vertices, amount_of_vertices)) {}
+Graph::Graph(const Graph& other) : adj_matrix(other.adj_matrix) {}
+Graph::Graph(Graph&& other) : adj_matrix(std::move(other.adj_matrix)) {}
+
+Graph& Graph::operator=(const Graph& other) { adj_matrix = other.adj_matrix; }
 
 void Graph::add_edge(size_t i, size_t j) {
   adj_matrix(i, j) = 1;
@@ -25,6 +28,8 @@ void Graph::rm_one_way_edge(size_t from, size_t to) {
 }
 
 size_t Graph::has_edge(size_t from, size_t to) { return adj_matrix(from, to); }
+
+size_t Graph::amount_of_vertices() { return adj_matrix.get_rows(); }
 
 void Graph::loadGraphFromFile(std::string filename) {
   std::ifstream infile(filename);

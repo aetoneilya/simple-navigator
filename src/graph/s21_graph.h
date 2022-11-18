@@ -10,6 +10,11 @@ class Graph {
  public:
   Graph() = default;
   Graph(size_t amount_of_vertices);
+  Graph(const Graph& other);
+  Graph(Graph&& other);
+  ~Graph() = default;
+
+  Graph& operator=(const Graph& other);
 
   void add_edge(size_t i, size_t j);
   void rm_edge(size_t i, size_t j);
@@ -17,6 +22,8 @@ class Graph {
   void rm_one_way_edge(size_t from, size_t to);
 
   size_t has_edge(size_t from, size_t to);
+
+  size_t amount_of_vertices();
 
   void loadGraphFromFile(std::string filename);
   void exportGraphToDot(std::string filename);
