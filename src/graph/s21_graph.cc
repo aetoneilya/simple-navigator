@@ -12,6 +12,8 @@ Graph& Graph::operator=(const Graph& other) {
   return *this;
 }
 
+double& Graph::operator()(size_t i, size_t j) const { return adj_matrix(i, j); }
+
 void Graph::add_edge(size_t i, size_t j) {
   adj_matrix(i, j) = 1;
   adj_matrix(j, i) = 1;

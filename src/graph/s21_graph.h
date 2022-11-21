@@ -15,6 +15,7 @@ class Graph {
   ~Graph() = default;
 
   Graph& operator=(const Graph& other);
+  double& operator()(size_t i, size_t j) const;
 
   void add_edge(size_t i, size_t j);
   void rm_edge(size_t i, size_t j);
