@@ -1,20 +1,18 @@
 #ifndef SRC_S21_GRAPH_AGORITHMS_H_
 #define SRC_S21_GRAPH_AGORITHMS_H_
 
+
 #include <iostream>
+#include <random>
 #include <string>
 #include <vector>
 
 #include "../graph/s21_graph.h"
-
-struct TsmResult {
-  std::vector<int> vertices;  // an array with the route you are looking for
-  double distance;            // the length of this route
-};
+#include "tsm/ant_colony.h"
 
 class GraphAlgoritms {
  public:
-  TsmResult solveTravelingSalesmanProblem(Graph& graph);
+  tsm::TsmResult solveTravelingSalesmanProblem(Graph& graph);
 
  private:
 };

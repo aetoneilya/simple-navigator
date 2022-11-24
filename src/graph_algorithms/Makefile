@@ -2,7 +2,7 @@ CXX=g++
 CFLAGS=-c -Wall -Wextra -Werror -std=c++17
 LDFLAGS=-lm -lgtest -lpthread
 
-LIBSRC=$(wildcard *.cc)
+LIBSRC=$(wildcard *.cc tsm/*.cc)
 LIBOBJ=$(LIBSRC:.cc=.o) #s21_graph.a
 
 STATICLIB=s21_graph_algorithms.a
