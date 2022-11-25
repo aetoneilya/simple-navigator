@@ -38,15 +38,24 @@ tsm::TsmResult nearestNeighborSolveTravelingSalesmanProblem(Graph& graph) {
 
   size_t number_of_cities = graph.amount_of_vertices();
 
-  for (int i = 0; i < number_of_cities; i++) {
+  for (size_t i = 0; i < number_of_cities; i++) {
     tsm::TsmResult temp;
     temp.vertices.resize(number_of_cities);
     temp.vertices[0] = i;
 
     std::vector<int> visited(number_of_cities);
 
-    for (int j = 1; j < number_of_cities; j++) {
+    for (size_t j = 1; j < number_of_cities; j++) {
+      size_t nearestness = (size_t)-1;
       int nearest = -1;  // find nearest city to graph[j-1]
+
+      for (size_t k = 0; k < number_of_cities; k++) {
+        if (graph.has_edge(j - 1, k) < nearestness && !visited[k]) {
+          nearestness = graph.has_edge(j - 1, k);
+          nearest = k;
+        }
+      }
+
       temp.vertices[j] = nearest;
       temp.distance += graph.has_edge(temp.vertices[j - 1], temp.vertices[j]);
     }
