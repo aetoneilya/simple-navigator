@@ -50,7 +50,7 @@ class AntColony {
                     const std::vector<std::vector<double>>& pheromone);
   void updatePheromone(std::vector<Ant>& ant_colony,
                        std::vector<std::vector<double>>& pheromone);
-  void findBestPath(std::vector<Ant>& ant_colony, TsmResult& best_path);
+  void updateBestPath(std::vector<Ant>& ant_colony, TsmResult& best_path);
 };
 
 }  // namespace tsm

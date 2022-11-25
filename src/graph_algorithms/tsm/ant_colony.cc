@@ -22,7 +22,7 @@ TsmResult AntColony::FindOptimalPath(Graph& graph) {
     std::vector<Ant> ant_colony(number_of_cities, regular_ant);
     simulateAnts(graph, ant_colony, pheromone);
     updatePheromone(ant_colony, pheromone);
-    findBestPath(ant_colony, best_path);
+    updateBestPath(ant_colony, best_path);
   }
 
   return best_path;
@@ -121,7 +121,7 @@ void AntColony::updatePheromone(std::vector<Ant>& ant_colony,
   }
 }
 
-void AntColony::findBestPath(std::vector<Ant>& ant_colony,
+void AntColony::updateBestPath(std::vector<Ant>& ant_colony,
                              TsmResult& best_path) {
   for (Ant ant : ant_colony)
     if (ant.distance < best_path.distance) {
