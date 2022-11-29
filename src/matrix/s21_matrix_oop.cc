@@ -1,143 +1,227 @@
-#include <stdexcept>
-#include <cmath>
-
 #include "s21_matrix_oop.h"
 
-bool S21Matrix::eq_matrix(const S21Matrix& other) {
-    bool result = _rows == other._rows && _cols == other._cols;
-    if (_rows == 0 || _cols == 0)
-        throw std::logic_error("in EQ_MATRIX: matrix is invalid");
+namespace s21 {
 
-    for (int i = 0; i < _rows && result; i++) {
-        for (int j = 0; j < _cols && result; j++) {
-            if (fabs(_matrix[i][j] - other._matrix[i][j]) >= EPS)
-                result = false;
-        }
-    }
-    return result;
-}
-void S21Matrix::sum_matrix(const S21Matrix& other) {
-    if (_rows == 0 || _cols == 0)
-        throw std::logic_error("in SUM_MATRIX: matrix is invalid");
-    if (_rows != other._rows || _cols != other._cols)
-        throw std::logic_error("in SUM_MATRIX: matrices should have equal dimensions");
+Matrix::Matrix(std::size_t rows, std::size_t cols) : rows_(rows), cols_(cols) {
+  if (rows == 0 || cols == 0) {
+    throw std::invalid_argument("Matrix: rows and columns must be more than 0");
+  }
 
-    for (int i = 0; i < _rows; i++) {
-        for (int j = 0; j < _cols; j++) {
-            _matrix[i][j] += other._matrix[i][j];
-        }
-    }
-}
-void S21Matrix::sub_matrix(const S21Matrix& other) {
-    if (_rows == 0 || _cols == 0)
-        throw std::logic_error("in SUB_MATRIX: matrix is invalid");
-    if (_rows != other._rows || _cols != other._cols)
-        throw std::logic_error("in SUB_MATRIX: matrices should have equal dimensions");
+  matrix_ = new int*[rows_];
 
-    for (int i = 0; i < _rows; i++) {
-        for (int j = 0; j < _cols; j++) {
-            _matrix[i][j] -= other._matrix[i][j];
-        }
-    }
+  for (std::size_t i = 0; i < rows_; i++) {
+    matrix_[i] = new int[cols_]();
+  }
 }
-void S21Matrix::mul_number(const double num) {
-    if (_rows == 0 || _cols == 0)
-        throw std::logic_error("in MUL_MATRIX(double): matrix is invalid");
 
-    for (int i = 0; i < _rows; i++) {
-        for (int j = 0; j < _cols; j++) {
-            _matrix[i][j] *= num;
-        }
+Matrix::Matrix(const Matrix& other) {
+  if (other.rows_ > 0 && other.cols_ > 0) {
+    Matrix m(other.rows_, other.cols_);
+    for (std::size_t i = 0; i < m.rows_; i++) {
+      std::memcpy(m.matrix_[i], other.matrix_[i], other.cols_ * sizeof(int));
     }
+    Swap(&m);
+  }
 }
-void S21Matrix::mul_matrix(const S21Matrix& other) {
-    if (_rows == 0 || _cols == 0 || other._rows == 0 || other._cols == 0)
-        throw std::logic_error("in MUL_MATRIX(S21Matrix): matrix is invalid");
-    if (_cols != other._rows)
-        throw std::logic_error("in MUL_MATRIX(S21Matrix): this->_cols should be equal to other._rows");
 
-    S21Matrix tmp(_rows, other._cols);
-    for (int i = 0; i < _rows; i++) {
-        for (int j = 0; j < other._cols; j++) {
-            for (int k = 0; k < _cols; k++)
-                tmp._matrix[i][j] += _matrix[i][k] * other._matrix[k][j];
-        }
-    }
-    (*this) = tmp;
-}
-S21Matrix S21Matrix::transpose() {
-    if (_rows == 0 || _cols == 0)
-        throw std::logic_error("in TRANSPOSE: matrix is invalid");
-    
-    S21Matrix result(_cols, _rows);
+Matrix::Matrix(Matrix&& other) { Swap(&other); }
 
-    for (int i = 0; i < _cols; i++) {
-        for (int j = 0; j < _rows; j++) {
-            result._matrix[i][j] = _matrix[j][i];
-        }
+Matrix::~Matrix() {
+  if (matrix_ != nullptr) {
+    for (std::size_t i = 0; i < rows_; i++) {
+      delete[] matrix_[i];
     }
-    return result;
+    delete[] matrix_;
+    matrix_ = nullptr;
+  }
+  rows_ = 0;
+  cols_ = 0;
 }
-S21Matrix S21Matrix::calc_complements() {
-    if (_rows == 0 || _cols == 0)
-        throw std::logic_error("in CALC_COMPLEMENTS: matrix is invalid");
-    if (_rows != _cols)
-        throw std::logic_error("in CALC_COMPLEMENTS: matrix must be square");
 
-    S21Matrix result(*this);
-    for (int i = 0; i < _rows; i++) {
-        for (int j = 0; j < _cols; j++) {
-            result._matrix[i][j] = pow(-1, i + j) * minor(i, j);
-        }
-    }
-    return result;
+void Matrix::Swap(Matrix* other) {
+  std::swap(rows_, other->rows_);
+  std::swap(cols_, other->cols_);
+  std::swap(matrix_, other->matrix_);
 }
-double S21Matrix::determinant() {
-    if (_rows == 0 || _cols == 0)
-        throw std::logic_error("in DETERMINANT: matrix is invalid");
-    if (_rows != _cols)
-        throw std::logic_error("in DETERMINANT: matrix must be square");
 
-    double result = 0;
-    if (_rows == 1) {
-        result = _matrix[0][0];
-    } else {
-        for (int i = 0; i < _cols; i++)
-            result += pow(-1, i) * _matrix[0][i] * minor(0, i);
+std::size_t Matrix::GetRows() const { return rows_; }
+
+void Matrix::SetRows(std::size_t rows) {
+  if (rows_ != rows) {
+    Matrix m(rows, cols_);
+    for (std::size_t i = 0; i < std::min(rows_, rows); i++) {
+      std::memcpy(m.matrix_[i], matrix_[i], cols_ * sizeof(int));
     }
-    return result;
+    Swap(&m);
+  }
 }
-double S21Matrix::minor(int row, int col) {
-    if (_rows == 0 || _cols == 0)
-        throw std::logic_error("in MINOR: matrix is invalid");
-    if (_rows != _cols)
-        throw std::logic_error("in MINOR: matrix must be square");
-    
-    S21Matrix submatr(_rows - 1, _cols - 1);
-    int skipped_row = 0;
-    for (int i = 0; i < _rows; i++) {
-        if (i == row) {
-            skipped_row = 1;
-            continue;
-        }
-        int skipped_col = 0;
-        for (int j = 0; j < _cols; j++) {
-            if (j == col) {
-                skipped_col = 1;
-                continue;
-            }
-            submatr._matrix[i - skipped_row][j - skipped_col] = _matrix[i][j];
-        }
+
+std::size_t Matrix::GetColumns() const { return cols_; }
+
+void Matrix::SetColumns(std::size_t cols) {
+  if (cols_ != cols) {
+    Matrix m(rows_, cols);
+    auto const length = std::min(cols_, cols);
+    for (std::size_t i = 0; i < rows_; i++) {
+      std::memcpy(m.matrix_[i], matrix_[i], length * sizeof(int));
     }
-    return submatr.determinant();
+    Swap(&m);
+  }
 }
-S21Matrix S21Matrix::inverse_matrix() {
-    double det = determinant();
-    if (fabs(det) < EPS)
-        throw std::runtime_error("in INVERSE_MATRIX: matrix determinant is 0");
-    
-    S21Matrix result = calc_complements();
-    result = result.transpose();
-    result.mul_number(1.0 / det);
-    return result;
+
+bool Matrix::EqMatrix(const Matrix& other) const {
+  if (rows_ != other.rows_ || cols_ != other.cols_) return false;
+  if (rows_ == 0 || cols_ == 0) {
+    throw std::logic_error("EqMatrix: invalid matrix");
+  }
+  for (std::size_t i = 0; i < rows_; i++) {
+    for (std::size_t j = 0; j < cols_; j++) {
+      if (matrix_[i][j] != other.matrix_[i][j]) return false;
+    }
+  }
+  return true;
 }
+
+void Matrix::SumMatrix(const Matrix& other) {
+  if (rows_ != other.rows_ || cols_ != other.cols_ || rows_ == 0 ||
+      cols_ == 0) {
+    throw std::logic_error(
+        "SumMatrix: invalid matrix or different dimensions of the matrix");
+  }
+  for (std::size_t i = 0; i < rows_; i++) {
+    for (std::size_t j = 0; j < cols_; j++) {
+      matrix_[i][j] += other.matrix_[i][j];
+    }
+  }
+}
+
+void Matrix::SubMatrix(const Matrix& other) {
+  if (rows_ != other.rows_ || cols_ != other.cols_ || rows_ == 0 ||
+      cols_ == 0) {
+    throw std::logic_error(
+        "SubMatrix: invalid matrix or different dimensions of the matrix");
+  }
+  for (std::size_t i = 0; i < rows_; i++) {
+    for (std::size_t j = 0; j < cols_; j++) {
+      matrix_[i][j] -= other.matrix_[i][j];
+    }
+  }
+}
+
+void Matrix::MulNumber(int number) {
+  if (rows_ == 0 || cols_ == 0) {
+    throw std::logic_error("MulNumber: invalid matrix");
+  }
+  for (std::size_t i = 0; i < rows_; i++) {
+    for (std::size_t j = 0; j < cols_; j++) {
+      matrix_[i][j] *= number;
+    }
+  }
+}
+
+void Matrix::MulMatrix(const Matrix& other) {
+  if (cols_ != other.rows_ || rows_ == 0 || cols_ == 0 || other.rows_ == 0 ||
+      other.cols_ == 0) {
+    throw std::logic_error(
+        "MulMatrix: invalid matrix or different dimensions of the matrix");
+  }
+  Matrix m(rows_, other.cols_);
+  for (std::size_t i = 0; i < m.rows_; i++) {
+    for (std::size_t j = 0; j < m.cols_; j++) {
+      for (std::size_t k = 0; k < cols_; k++) {
+        m.matrix_[i][j] += matrix_[i][k] * other.matrix_[k][j];
+      }
+    }
+  }
+  Swap(&m);
+}
+
+Matrix Matrix::Transpose() const {
+  if (rows_ == 0 || cols_ == 0) {
+    throw std::logic_error("Transpose: invalid matrix");
+  }
+  Matrix m(cols_, rows_);
+  for (std::size_t i = 0; i < m.rows_; i++) {
+    for (std::size_t j = 0; j < m.cols_; j++) {
+      m.matrix_[i][j] = matrix_[j][i];
+    }
+  }
+  return m;
+}
+
+Matrix Matrix::operator+(const Matrix& other) const {
+  Matrix m(*this);
+  m.SumMatrix(other);
+  return m;
+}
+
+Matrix Matrix::operator-(const Matrix& other) const {
+  Matrix m(*this);
+  m.SubMatrix(other);
+  return m;
+}
+
+Matrix Matrix::operator*(const Matrix& other) const {
+  Matrix m(*this);
+  m.MulMatrix(other);
+  return m;
+}
+
+Matrix operator*(Matrix const& self, int number) {
+  Matrix m(self);
+  m.MulNumber(number);
+  return m;
+}
+
+Matrix operator*(int number, Matrix const& self) {
+  return operator*(self, number);
+}
+
+bool Matrix::operator==(const Matrix& other) const { return EqMatrix(other); }
+
+Matrix& Matrix::operator=(const Matrix& other) {
+  if (this != &other) {
+    Matrix(other).Swap(this);
+  }
+  return *this;
+}
+
+Matrix& Matrix::operator=(Matrix&& other) {
+  if (this != &other) {
+    Matrix(std::move(other)).Swap(this);
+  }
+  return *this;
+}
+
+Matrix& Matrix::operator+=(const Matrix& other) {
+  SumMatrix(other);
+  return *this;
+}
+
+Matrix& Matrix::operator-=(const Matrix& other) {
+  SubMatrix(other);
+  return *this;
+}
+
+Matrix& Matrix::operator*=(const Matrix& other) {
+  MulMatrix(other);
+  return *this;
+}
+
+Matrix& Matrix::operator*=(int number) {
+  MulNumber(number);
+  return *this;
+}
+
+int& Matrix::operator()(std::size_t i, std::size_t j) {
+  return const_cast<int&>(const_cast<const Matrix*>(this)->operator()(i, j));
+}
+
+int const& Matrix::operator()(std::size_t i, std::size_t j) const {
+  if (i >= rows_ || j >= cols_) {
+    throw std::out_of_range("operator(): i or j is out of range");
+  }
+  return matrix_[i][j];
+}
+
+}  // namespace s21

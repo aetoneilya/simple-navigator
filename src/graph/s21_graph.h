@@ -1,38 +1,49 @@
-#ifndef SRC_S21_GRAPH_H_
-#define SRC_S21_GRAPH_H_
+#ifndef SRC_GRAPH_S21_GRAPH_H_
+#define SRC_GRAPH_S21_GRAPH_H_
 
+#include <fstream>
+// TODO(ppoutine) Remove in prod
 #include <iostream>
+#include <memory>
 #include <string>
 
 #include "../matrix/s21_matrix_oop.h"
 
+namespace s21 {
+
 class Graph {
  public:
-  Graph() = default;
-  Graph(size_t amount_of_vertices);
+  Graph();
+  explicit Graph(std::size_t vertices);
   Graph(const Graph& other);
   Graph(Graph&& other);
   ~Graph() = default;
 
   Graph& operator=(const Graph& other);
-  double& operator()(size_t i, size_t j) const;
+  Graph& operator=(Graph&& other);
+  int& operator()(std::size_t i, std::size_t j);
+  const int& operator()(std::size_t i, std::size_t j) const;
 
-  void add_edge(size_t i, size_t j);
-  void rm_edge(size_t i, size_t j);
-  void add_edge(size_t from, size_t to, size_t weight);
-  void rm_one_way_edge(size_t from, size_t to);
+  void Swap(Graph* other);
 
-  size_t has_edge(size_t from, size_t to);
+  void AddEdge(std::size_t i, std::size_t j);
+  void AddEdge(std::size_t from, std::size_t to, int weight);
+  void RemoveEdge(std::size_t i, std::size_t j);
+  void RemoveOneWayEdge(std::size_t from, std::size_t to);
 
-  size_t amount_of_vertices();
+  std::size_t HasEdge(std::size_t from, std::size_t to);
 
-  void loadGraphFromFile(std::string filename);
-  void exportGraphToDot(std::string filename);
+  std::size_t AmountOfVertices();
 
-  void draw();
+  void LoadGraphFromFile(const std::string& filename);
+  void ExportGraphToDot(const std::string& filename);
+
+  void Draw();
 
  private:
-  S21Matrix adj_matrix;
+  std::shared_ptr<Matrix> adj_matrix_;
 };
 
-#endif  // SRC_S21_GRAPH_H_
+}  // namespace s21
+
+#endif  // SRC_GRAPH_S21_GRAPH_H_

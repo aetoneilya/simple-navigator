@@ -1,49 +1,57 @@
-#pragma once
+#ifndef SRC_MATRIX_S21_MATRIX_OOP_H_
+#define SRC_MATRIX_S21_MATRIX_OOP_H_
 
-#define DEFAULT_MATR_SIZE 3
+#include <cmath>
+#include <cstring>
+#include <stdexcept>
+#include <string_view>
 
-#define EPS 1e-7
+namespace s21 {
 
-class S21Matrix {
- private:
-    int _rows, _cols;
-    double **_matrix;
-
+class Matrix {
  public:
-    S21Matrix();
-    S21Matrix(int rows, int cols);
-    S21Matrix(const S21Matrix& other);
-    S21Matrix(S21Matrix&& other);
-    ~S21Matrix();
+  Matrix() = default;
+  Matrix(std::size_t rows, std::size_t cols);
+  Matrix(const Matrix& other);
+  Matrix(Matrix&& other);
+  ~Matrix();
 
-    bool eq_matrix(const S21Matrix& other);
-    void sum_matrix(const S21Matrix& other);
-    void sub_matrix(const S21Matrix& other);
-    void mul_number(const double num);
-    void mul_matrix(const S21Matrix& other);
-    S21Matrix transpose();
-    S21Matrix calc_complements();
-    double determinant();
-    double minor(int row, int col);
-    S21Matrix inverse_matrix();
+  void Swap(Matrix* other);
 
-    S21Matrix operator+(const S21Matrix& other);
-    S21Matrix operator-(const S21Matrix& other);
-    S21Matrix operator*(const S21Matrix& other);
-    friend S21Matrix operator*(S21Matrix const& self, double number);
-    friend S21Matrix operator*(double number, S21Matrix const& self);
-    bool operator==(const S21Matrix& other);
-    S21Matrix& operator=(const S21Matrix& other);
-    S21Matrix& operator+=(const S21Matrix& other);
-    S21Matrix& operator-=(const S21Matrix& other);
-    S21Matrix& operator*=(const S21Matrix& other);
-    S21Matrix& operator*=(const double num);
-    double & operator()(int i, int j) const;
+  std::size_t GetRows() const;
+  void SetRows(std::size_t rows);
+  std::size_t GetColumns() const;
+  void SetColumns(std::size_t cols);
 
-    int get_rows();
-    int get_cols();
+  bool EqMatrix(const Matrix& other) const;
+  void SumMatrix(const Matrix& other);
+  void SubMatrix(const Matrix& other);
+  void MulNumber(int number);
+  void MulMatrix(const Matrix& other);
+  Matrix Transpose() const;
 
-    void set_rows(int rows);
-    void set_cols(int cols);
-    void resize(int rows, int cols);
+  Matrix operator+(const Matrix& other) const;
+  Matrix operator-(const Matrix& other) const;
+  Matrix operator*(const Matrix& other) const;
+  friend Matrix operator*(const Matrix& self, int number);
+  friend Matrix operator*(int number, const Matrix& self);
+  bool operator==(const Matrix& other) const;
+  Matrix& operator=(const Matrix& other);
+  Matrix& operator=(Matrix&& other);
+  Matrix& operator+=(const Matrix& other);
+  Matrix& operator-=(const Matrix& other);
+  Matrix& operator*=(const Matrix& other);
+  Matrix& operator*=(int number);
+  int& operator()(std::size_t i, std::size_t j);
+  const int& operator()(std::size_t i, std::size_t j) const;
+
+ private:
+  constexpr static const double kEps = 1e-7;
+
+  std::size_t rows_ = 0, cols_ = 0;
+  int** matrix_ = nullptr;
 };
+
+}  // namespace s21
+
+#endif  // SRC_MATRIX_S21_MATRIX_OOP_H_

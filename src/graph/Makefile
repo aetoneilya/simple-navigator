@@ -1,27 +1,34 @@
 CXX=g++
-CFLAGS=-c -Wall -Wextra -Werror -std=c++17
-LDFLAGS=-lm -lgtest -lpthread
+CXXFLAGS=-c -pedantic -Wall -Wextra -Wshadow -Wconversion -Wunreachable-code -std=c++17
+LDFLAGS=-lm
 
-LIBSRC=$(wildcard *.cc)
-LIBOBJ=$(LIBSRC:.cc=.o) #s21_matrix_oop.a
+DEBUG ?= 0
 
+ifeq ($(DEBUG),1)
+	CXXFLAGS+=-g
+	CXXFLAGS+=-DDEBUG
+else
+	CXXFLAGS+=-O2
+	CXXFLAGS+=-Werror
+endif
+
+SRC=$(wildcard *.cc)
+OBJ=$(SRC:.cc=.o)
 STATICLIB=s21_graph.a
 
-.PHONY: all clean
+.PHONY: all build clean rebuild $(STATICLIB)
 
-all: $(STATICLIB)
+all: build
+
+build: $(STATICLIB)
 
 %.o: %.cc
-	$(CXX) $(CFLAGS) $^ -o $@
-
-s21_matrix_oop.a:
-	cd matrix && \
-	make s21_matrix_oop.a && \
-	cp s21_matrix_oop.a ../
+	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm -rf $(LIBOBJ) $(STATICLIB)
+	rm -rf *.o $(EXECUTABLE) $(STATICLIB)
 
-$(STATICLIB): $(LIBOBJ)
+rebuild: clean all
+
+$(STATICLIB): $(OBJ)
 	ar rcs $@ $^
-

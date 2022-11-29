@@ -3,9 +3,10 @@
 #include "graph_algorithms/s21_graph_algorithms.h"
 
 int main() {
-  Graph my_graph;
-  my_graph.loadGraphFromFile("test_graph.txt");
-  my_graph.add_edge(0, 0, 11);
-  my_graph.draw();
+  s21::Matrix matrix;
+  s21::Graph my_graph;
+  my_graph.LoadGraphFromFile("test_graph.txt");
+  my_graph.AddEdge(0, 0, 11);
+  my_graph.Draw();
   return 0;
 }
