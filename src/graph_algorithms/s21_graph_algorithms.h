@@ -1,16 +1,26 @@
 #ifndef SRC_GRAPH_ALGORITHMS_S21_GRAPH_ALGORITHMS_H_
 #define SRC_GRAPH_ALGORITHMS_S21_GRAPH_ALGORITHMS_H_
 
+#include <algorithm>
 #include <iostream>
+#include <random>
 #include <string>
+#include <vector>
 
 #include "../graph/s21_graph.h"
+#include "ant_colony/ant_colony.h"
 
 namespace s21 {
 
 class GraphAlgoritms {
  public:
+  tsm::TsmResult solveTravelingSalesmanProblem(Graph& graph);
+  tsm::TsmResult naiveSolveTravelingSalesmanProblem(Graph& graph);
+  tsm::TsmResult nearestNeighborSolveTravelingSalesmanProblem(Graph& graph);
+
  private:
+  //   tsm::TsmResult naiveRecursion(Graph& graph, size_t visited_mask, int
+  //   current_city, int start_city);
 };
 
 }  // namespace s21
