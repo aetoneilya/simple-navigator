@@ -12,7 +12,7 @@ else
 	CXXFLAGS+=-Werror
 endif
 
-SRC=$(wildcard *.cc)
+SRC=$(shell find . -type f -name "*.cc")
 OBJ=$(SRC:.cc=.o)
 STATICLIB=s21_graph_algorithms.a
 

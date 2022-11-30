@@ -24,6 +24,7 @@ Graph& Graph::operator=(Graph&& other) {
   }
   return *this;
 }
+
 int& Graph::operator()(std::size_t i, std::size_t j) {
   return const_cast<int&>(const_cast<const Graph*>(this)->operator()(i, j));
 }
@@ -52,11 +53,11 @@ void Graph::RemoveOneWayEdge(std::size_t from, std::size_t to) {
   adj_matrix_->operator()(from, to) = 0;
 }
 
-std::size_t Graph::HasEdge(std::size_t from, std::size_t to) {
+int Graph::HasEdge(std::size_t from, std::size_t to) const {
   return adj_matrix_->operator()(from, to);
 }
 
-std::size_t Graph::AmountOfVertices() { return adj_matrix_->GetRows(); }
+std::size_t Graph::AmountOfVertices() const { return adj_matrix_->GetRows(); }
 
 void Graph::LoadGraphFromFile(const std::string& filename) {
   std::ifstream infile(filename);
@@ -75,7 +76,7 @@ void Graph::ExportGraphToDot(const std::string& filename) {
   static_cast<void>(filename);
 }
 
-void Graph::Draw() {
+void Graph::Draw() const {
   std::cout << adj_matrix_->GetRows() << "\n";
   for (std::size_t i = 0; i < adj_matrix_->GetRows(); i++) {
     for (std::size_t j = 0; j < adj_matrix_->GetColumns(); j++) {
