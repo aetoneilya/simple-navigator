@@ -14,9 +14,9 @@ namespace s21 {
 
 class GraphAlgoritms {
  public:
-  tsm::TsmResult solveTravelingSalesmanProblem(Graph& graph);
-  tsm::TsmResult naiveSolveTravelingSalesmanProblem(Graph& graph);
-  tsm::TsmResult nearestNeighborSolveTravelingSalesmanProblem(Graph& graph);
+  tsm::TsmResult SolveTravelingSalesmanProblem(Graph& graph);
+  tsm::TsmResult NaiveSolveTravelingSalesmanProblem(Graph& graph);
+  tsm::TsmResult NearestNeighborSolveTravelingSalesmanProblem(Graph& graph);
 
  private:
   //   tsm::TsmResult naiveRecursion(Graph& graph, size_t visited_mask, int

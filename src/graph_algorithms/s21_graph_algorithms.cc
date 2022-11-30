@@ -4,12 +4,12 @@
 
 namespace s21 {
 
-tsm::TsmResult GraphAlgoritms::solveTravelingSalesmanProblem(Graph& graph) {
+tsm::TsmResult GraphAlgoritms::SolveTravelingSalesmanProblem(Graph& graph) {
   tsm::AntColony ac;
   return ac.FindOptimalPath(graph);
 }
 
-tsm::TsmResult GraphAlgoritms::naiveSolveTravelingSalesmanProblem(
+tsm::TsmResult GraphAlgoritms::NaiveSolveTravelingSalesmanProblem(
     Graph& graph) {
   size_t number_of_cities = graph.AmountOfVertices();
 
@@ -28,13 +28,12 @@ tsm::TsmResult GraphAlgoritms::naiveSolveTravelingSalesmanProblem(
           graph(temp.vertices[i], temp.vertices[(i + 1) % number_of_cities]);
 
     if (temp.distance < best_result.distance) best_result = temp;
-
   } while (std::next_permutation(temp.vertices.begin(), temp.vertices.end()));
 
   return best_result;
 }
 
-tsm::TsmResult nearestNeighborSolveTravelingSalesmanProblem(Graph& graph) {
+tsm::TsmResult NearestNeighborSolveTravelingSalesmanProblem(Graph& graph) {
   tsm::TsmResult best_result;
   best_result.distance = INFINITY;
 

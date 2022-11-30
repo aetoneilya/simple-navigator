@@ -1,5 +1,5 @@
-#ifndef SRC_S21_GRAPH_AGORITHMS_TSM_ANT_COLONY_H_
-#define SRC_S21_GRAPH_AGORITHMS_TSM_ANT_COLONY_H_
+#ifndef SRC_GRAPH_ALGORITHMS_ANT_COLONY_ANT_COLONY_H_
+#define SRC_GRAPH_ALGORITHMS_ANT_COLONY_ANT_COLONY_H_
 
 #include <cmath>
 #include <random>
@@ -18,7 +18,7 @@ struct TsmResult {
 
 class AntColony {
  public:
-  TsmResult FindOptimalPath(Graph& graph);
+  TsmResult FindOptimalPath(const Graph& graph);
 
  private:
   struct Ant {
@@ -37,11 +37,11 @@ class AntColony {
 
   const int iteration = 10;
 
-  double Antraction(Graph& graph,
+  double Antraction(const Graph& graph,
                     const std::vector<std::vector<double>>& pheromone, int from,
                     int to);
 
-  void SimulateAnts(Graph& graph, std::vector<Ant>& ant_colony,
+  void SimulateAnts(const Graph& graph, std::vector<Ant>& ant_colony,
                     const std::vector<std::vector<double>>& pheromone);
   void UpdatePheromone(const std::vector<Ant>& ant_colony,
                        std::vector<std::vector<double>>& pheromone);
@@ -52,4 +52,4 @@ class AntColony {
 
 }  // namespace s21
 
-#endif  // SRC_S21_GRAPH_AGORITHMS_TSM_ANT_COLONY_H_
+#endif  // SRC_GRAPH_ALGORITHMS_ANT_COLONY_ANT_COLONY_H_

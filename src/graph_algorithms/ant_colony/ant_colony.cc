@@ -6,7 +6,7 @@ namespace s21 {
 
 namespace tsm {
 
-TsmResult AntColony::FindOptimalPath(Graph& graph) {
+TsmResult AntColony::FindOptimalPath(const Graph& graph) {
   const int number_of_cities = (int)graph.AmountOfVertices();
   std::vector<std::vector<double>> pheromone(number_of_cities);
 
@@ -31,7 +31,7 @@ TsmResult AntColony::FindOptimalPath(Graph& graph) {
 }
 
 void AntColony::SimulateAnts(
-    Graph& graph, std::vector<Ant>& ant_colony,
+    const Graph& graph, std::vector<Ant>& ant_colony,
     const std::vector<std::vector<double>>& pheromone) {
   std::random_device rd;
   std::mt19937 gen(rd());
@@ -133,7 +133,7 @@ void AntColony::UpdateBestPath(const std::vector<Ant>& ant_colony,
     }
 }
 
-double AntColony::Antraction(Graph& graph,
+double AntColony::Antraction(const Graph& graph,
                              const std::vector<std::vector<double>>& pheromone,
                              int from, int to) {
   double proximity = 1.0 / (double)graph(from, to);

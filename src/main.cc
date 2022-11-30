@@ -8,8 +8,8 @@ int main() {
   //   my_graph.add_edge(0, 0, 11);
   my_graph.Draw();
   s21::GraphAlgoritms ga;
-  //   tsm::TsmResult res = ga.solveTravelingSalesmanProblem(my_graph);
-  s21::tsm::TsmResult res = ga.naiveSolveTravelingSalesmanProblem(my_graph);
+  //   tsm::TsmResult res = ga.SolveTravelingSalesmanProblem(my_graph);
+  s21::tsm::TsmResult res = ga.NaiveSolveTravelingSalesmanProblem(my_graph);
 
   std::cout << "distance: " << res.distance << std::endl;
   for (auto city : res.vertices) std::cout << city << ' ';
