@@ -29,12 +29,6 @@ class AntColony {
         : path(number_of_cities, -1), distance(0) {}
   };
 
-  //   void PrintAnt(Ant ant) {
-  //     std::cout << "ant distance:  " << ant.distance << "\tpath: ";
-  //     for (auto ax : ant.path) std::cout << ax << ' ';
-  //     std::cout << std::endl;
-  //   }
-
   const double alpha = 1;
   const double beta = 1.;
   const double start_pheromone = 0.2;
@@ -43,18 +37,15 @@ class AntColony {
 
   const int iteration = 10;
 
-  double antraction(Graph& graph,
+  double Antraction(Graph& graph,
                     const std::vector<std::vector<double>>& pheromone, int from,
-                    int to) {
-    double proximity = 1.0 / (double)graph(from, to);
-    return ((pow(pheromone[from][to], alpha) * pow((proximity), beta)));
-  }
+                    int to);
 
-  void simulateAnts(Graph& graph, std::vector<Ant>& ant_colony,
+  void SimulateAnts(Graph& graph, std::vector<Ant>& ant_colony,
                     const std::vector<std::vector<double>>& pheromone);
-  void updatePheromone(const std::vector<Ant>& ant_colony,
+  void UpdatePheromone(const std::vector<Ant>& ant_colony,
                        std::vector<std::vector<double>>& pheromone);
-  void updateBestPath(const std::vector<Ant>& ant_colony, TsmResult& best_path);
+  void UpdateBestPath(const std::vector<Ant>& ant_colony, TsmResult& best_path);
 };
 
 }  // namespace tsm

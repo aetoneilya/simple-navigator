@@ -22,15 +22,15 @@ TsmResult AntColony::FindOptimalPath(Graph& graph) {
 
   for (int i = 0; i < iteration; i++) {
     std::vector<Ant> ant_colony(number_of_cities, regular_ant);
-    simulateAnts(graph, ant_colony, pheromone);
-    updatePheromone(ant_colony, pheromone);
-    updateBestPath(ant_colony, best_path);
+    SimulateAnts(graph, ant_colony, pheromone);
+    UpdatePheromone(ant_colony, pheromone);
+    UpdateBestPath(ant_colony, best_path);
   }
 
   return best_path;
 }
 
-void AntColony::simulateAnts(
+void AntColony::SimulateAnts(
     Graph& graph, std::vector<Ant>& ant_colony,
     const std::vector<std::vector<double>>& pheromone) {
   std::random_device rd;
@@ -55,7 +55,7 @@ void AntColony::simulateAnts(
         //! very dangerous part of algorithm undefined behaviour
         cities_attraction[city_to] =
             !visited[city_to]
-                ? antraction(graph, pheromone, current_city, city_to)
+                ? Antraction(graph, pheromone, current_city, city_to)
                 : 0;
         // SAFE variant
         // cities_attraction[city_to] =
@@ -105,7 +105,7 @@ void AntColony::simulateAnts(
   }
 }
 
-void AntColony::updatePheromone(const std::vector<Ant>& ant_colony,
+void AntColony::UpdatePheromone(const std::vector<Ant>& ant_colony,
                                 std::vector<std::vector<double>>& pheromone) {
   for (size_t i = 0; i < pheromone.size(); i++)
     for (size_t j = 0; j < pheromone[i].size(); j++)
@@ -123,7 +123,7 @@ void AntColony::updatePheromone(const std::vector<Ant>& ant_colony,
   }
 }
 
-void AntColony::updateBestPath(const std::vector<Ant>& ant_colony,
+void AntColony::UpdateBestPath(const std::vector<Ant>& ant_colony,
                                TsmResult& best_path) {
   for (Ant ant : ant_colony)
     if (ant.distance < best_path.distance) {
@@ -131,6 +131,13 @@ void AntColony::updateBestPath(const std::vector<Ant>& ant_colony,
       best_path.distance = ant.distance;
       //   PrintAnt(ant);
     }
+}
+
+double AntColony::Antraction(Graph& graph,
+                             const std::vector<std::vector<double>>& pheromone,
+                             int from, int to) {
+  double proximity = 1.0 / (double)graph(from, to);
+  return ((pow(pheromone[from][to], alpha) * pow((proximity), beta)));
 }
 
 }  // namespace tsm
