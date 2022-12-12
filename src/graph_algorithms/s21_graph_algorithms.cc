@@ -69,4 +69,52 @@ tsm::TsmResult NearestNeighborSolveTravelingSalesmanProblem(Graph& graph) {
   return best_result;
 }
 
+std::vector<int> GraphAlgoritms::depthFirstSearch(Graph& graph,
+                                                  int startVertex) {
+  std::vector<int> result(0);
+  s21::stack<int> vertices;
+  std::vector<bool> vertices_used(graph.AmountOfVertices(), false);
+
+  vertices.push(startVertex);
+  vertices_used[startVertex - 1] = 1;
+
+  while (vertices.empty() == false) {
+    int cur_vertice = vertices.top() - 1;
+    result.push_back(vertices.top());
+    vertices.pop();
+
+    for (size_t i = 0; i < graph.AmountOfVertices(); i++) {
+      if (graph(cur_vertice, i) != 0 && vertices_used[i] == false) {
+        vertices.push((int)i + 1);
+        vertices_used[i] = true;
+      }
+    }
+  }
+
+  return result;
+}
+std::vector<int> GraphAlgoritms::breadthFirstSearch(Graph& graph,
+                                                    int startVertex) {
+  std::vector<int> result(0);
+  s21::queue<int> vertices;
+  std::vector<bool> vertices_used(graph.AmountOfVertices(), false);
+
+  vertices.push(startVertex);
+  vertices_used[startVertex - 1] = 1;
+
+  while (vertices.empty() == false) {
+    int cur_vertice = vertices.front() - 1;
+    result.push_back(vertices.front());
+    vertices.pop();
+
+    for (size_t i = 0; i < graph.AmountOfVertices(); i++) {
+      if (graph(cur_vertice, i) != 0 && vertices_used[i] == false) {
+        vertices.push((int)i + 1);
+        vertices_used[i] = true;
+      }
+    }
+  }
+
+  return result;
+}
 }  // namespace s21

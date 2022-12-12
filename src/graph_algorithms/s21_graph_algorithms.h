@@ -7,6 +7,7 @@
 #include <string>
 #include <vector>
 
+#include "../containers/s21_containers.h"
 #include "../graph/s21_graph.h"
 #include "ant_colony/ant_colony.h"
 
@@ -17,6 +18,9 @@ class GraphAlgoritms {
   tsm::TsmResult SolveTravelingSalesmanProblem(Graph& graph);
   tsm::TsmResult NaiveSolveTravelingSalesmanProblem(Graph& graph);
   tsm::TsmResult NearestNeighborSolveTravelingSalesmanProblem(Graph& graph);
+
+  std::vector<int> depthFirstSearch(Graph& graph, int startVertex);
+  std::vector<int> breadthFirstSearch(Graph& graph, int startVertex);
 
  private:
   //   tsm::TsmResult naiveRecursion(Graph& graph, size_t visited_mask, int
