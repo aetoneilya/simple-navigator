@@ -21,8 +21,10 @@ class GraphAlgoritms {
 
   std::vector<int> depthFirstSearch(Graph& graph, int startVertex);
   std::vector<int> breadthFirstSearch(Graph& graph, int startVertex);
+  int getShortestPathBetweenVertices(Graph& graph, int vertex1, int vertex2);
 
  private:
+  static const int kUndefined = -1;
   //   tsm::TsmResult naiveRecursion(Graph& graph, size_t visited_mask, int
   //   current_city, int start_city);
 };

@@ -4,7 +4,7 @@ CXX=g++
 CXXFLAGS=-c -pedantic -Wall -Wextra -Wshadow -Wconversion -Wunreachable-code -std=c++17
 LDFLAGS=-lm -lpthread
 
-DEBUG ?= 1
+DEBUG ?= 0
 
 ifeq ($(DEBUG),1)
 	CXXFLAGS+=-g

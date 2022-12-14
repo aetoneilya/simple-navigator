@@ -48,7 +48,7 @@ tsm::TsmResult NearestNeighborSolveTravelingSalesmanProblem(Graph& graph) {
 
     for (size_t j = 1; j < number_of_cities; j++) {
       int nearestness = graph(j - 1, 0);
-      int nearest = 0;  // find nearest city to graph[j-1]
+      int nearest = 0;  // find nearest city to graph[jkUndefined]
 
       for (size_t k = 0; k < number_of_cities; k++) {
         if (graph(j - 1, k) < nearestness && !visited[k]) {
@@ -117,4 +117,44 @@ std::vector<int> GraphAlgoritms::breadthFirstSearch(Graph& graph,
 
   return result;
 }
+
+int GraphAlgoritms::getShortestPathBetweenVertices(Graph& graph, int vertex1,
+                                                   int vertex2) {
+  std::vector<int> shotrestPathsToVert(graph.AmountOfVertices(), kUndefined);
+  std::vector<bool> verticeVisited(graph.AmountOfVertices(), false);
+
+  int curVertex = vertex1 - 1;
+  shotrestPathsToVert[curVertex] = 0;
+  verticeVisited[curVertex] = true;
+
+  while (curVertex != kUndefined && curVertex != vertex2 - 1) {
+    for (size_t i = 0; i < graph.AmountOfVertices(); i++) {
+      if (verticeVisited[i] == true || graph(curVertex, i) == 0) {
+        continue;
+      }
+
+      int newPathLen = shotrestPathsToVert[curVertex] + graph(curVertex, i);
+
+      if (shotrestPathsToVert[i] == kUndefined) {
+        shotrestPathsToVert[i] = newPathLen;
+      } else {
+        shotrestPathsToVert[i] = std::min(shotrestPathsToVert[i], newPathLen);
+      }
+    }
+    curVertex = kUndefined;
+    for (size_t i = 0; i < graph.AmountOfVertices(); i++) {
+      if (verticeVisited[i] == true) {
+        continue;
+      }
+      if (curVertex == kUndefined ||
+          shotrestPathsToVert[i] < shotrestPathsToVert[curVertex]) {
+        curVertex = (int)i;
+        verticeVisited[curVertex] = true;
+      }
+    }
+  }
+
+  return shotrestPathsToVert[vertex2 - 1];
+}
+
 }  // namespace s21
