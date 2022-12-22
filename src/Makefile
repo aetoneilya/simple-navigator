@@ -14,20 +14,20 @@ else
 	CXXFLAGS+=-Werror
 endif
 
+CONTAINERSSTATICLIB=s21_containers.a
+CONTAINERSLIBSRCDIR=containers
 GRAPHSTATICLIB=s21_graph.a
 GRAPHLIBSRCDIR=graph
 ALGSTATICLIB=s21_graph_algorithms.a
 ALGLIBSRCDIR=graph_algorithms
 MATRIXSTATICLIB=s21_matrix_oop.a
 MATRIXLIBSRCDIR=matrix
-CONTAINERSSTATICLIB=s21_containers.a
-CONTAINERSLIBSRCDIR=containers
 
 MAINSRC=main.cc
 MAINOBJ=$(MAINSRC:.cc=.o)
 TESTSRC=tests.cc
 TESTOBJ=$(TESTSRC:.cc=.o)
-SRC=$(filter-out ./$(MAINSRC) ./$(TESTSRC), $(shell find . -type f -name "*.cc" -not -path "./$(GRAPHLIBSRCDIR)/*" -not -path "./$(ALGLIBSRCDIR)/*" -not -path "./$(MATRIXLIBSRCDIR)/*"))
+SRC=$(filter-out ./$(MAINSRC) ./$(TESTSRC), $(shell find . -type f -name "*.cc" -not -path "./$(CONTAINERSLIBSRCDIR)/*" -not -path "./$(GRAPHLIBSRCDIR)/*" -not -path "./$(ALGLIBSRCDIR)/*" -not -path "./$(MATRIXLIBSRCDIR)/*"))
 OBJ=$(SRC:.cc=.o)
 
 EXECUTABLE=result_file
@@ -39,14 +39,18 @@ REPORTDIR=report
 
 all: run
 
-build: $(MAINOBJ) $(OBJ) $(GRAPHSTATICLIB) $(ALGSTATICLIB) $(MATRIXSTATICLIB)  $(CONTAINERSSTATICLIB)
+build: $(CONTAINERSSTATICLIB) $(MAINOBJ) $(OBJ) $(GRAPHSTATICLIB) $(ALGSTATICLIB) $(MATRIXSTATICLIB) 
 	$(CXX) $(MAINOBJ) $(OBJ) \
-	$(GRAPHLIBSRCDIR)/$(GRAPHSTATICLIB) $(ALGLIBSRCDIR)/$(ALGSTATICLIB) \
-	$(MATRIXLIBSRCDIR)/$(MATRIXSTATICLIB) $(CONTAINERSLIBSRCDIR)/$(CONTAINERSSTATICLIB) \
+	$(CONTAINERSLIBSRCDIR)/$(CONTAINERSSTATICLIB) $(GRAPHLIBSRCDIR)/$(GRAPHSTATICLIB) \
+	$(ALGLIBSRCDIR)/$(ALGSTATICLIB) $(MATRIXLIBSRCDIR)/$(MATRIXSTATICLIB) \
 	-o $(EXECUTABLE) $(LDFLAGS)
 
 run: build
 	./$(EXECUTABLE)
+
+$(CONTAINERSSTATICLIB):
+	cd $(CONTAINERSLIBSRCDIR) && \
+	make $(CONTAINERSSTATICLIB)
 
 $(GRAPHSTATICLIB):
 	cd $(GRAPHLIBSRCDIR) && \
@@ -60,12 +64,8 @@ $(MATRIXSTATICLIB):
 	cd $(MATRIXLIBSRCDIR) && \
 	make $(MATRIXSTATICLIB)
 
-$(CONTAINERSSTATICLIB):
-	cd $(CONTAINERSLIBSRCDIR) && \
-	make $(CONTAINERSSTATICLIB)
-
 tests: LDFLAGS+=-lgtest
-tests: $(TESTOBJ) $(OBJ) $(GRAPHSTATICLIB) $(ALGSTATICLIB) $(MATRIXSTATICLIB) $(CONTAINERSSTATICLIB)
+tests: $(TESTOBJ) $(OBJ) $(CONTAINERSSTATICLIB) $(GRAPHSTATICLIB) $(ALGSTATICLIB) $(MATRIXSTATICLIB)
 	$(CXX) $^ -o $(EXECUTABLE) $(LDFLAGS)
 	./$(EXECUTABLE)
 
@@ -79,18 +79,13 @@ gcov_report: tests
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
-format:
-	clang-format -i $(shell find . -type f \( -name "*.h" -o -name "*.cc" \))
-
 style:
-	cppcheck --std=c++17 --enable=all --suppress=missingInclude --suppress=unusedFunction ./
+	cppcheck --std=c++17 --enable=all --suppress=missingInclude --suppress=unusedFunction --suppress=constParameter ./
+	@clang-format -i $(shell find . -type f \( -name "*.h" -o -name "*.cc" \))
 	clang-format -n $(shell find . -type f \( -name "*.h" -o -name "*.cc" \))
 
 cpplint:
-	cpplint --extensions=cc,h --recursive ./
-
-leaks: tests
-	CK_FORK=no valgrind -s --leak-check=full --show-leak-kinds=all --track-origins=yes ./$(EXECUTABLE)
+	cpplint --extensions=cc,h --filter=-runtime/references --recursive ./
 
 clean:
 	cd $(GRAPHLIBSRCDIR) && make clean
