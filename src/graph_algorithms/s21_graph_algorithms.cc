@@ -157,4 +157,36 @@ int GraphAlgoritms::getShortestPathBetweenVertices(Graph& graph, int vertex1,
   return shotrestPathsToVert[vertex2 - 1];
 }
 
+Matrix GraphAlgoritms::getLeastSpanningTree(Graph& graph) {
+  Matrix adjacency_matrix(graph.AmountOfVertices(), graph.AmountOfVertices());
+
+  std::vector<bool> used_vertices(graph.AmountOfVertices(), false);
+
+  used_vertices[0] = true;
+  std::pair<std::size_t, std::size_t> coord;
+  for (std::size_t edge = 0; edge < graph.AmountOfVertices() - 1; ++edge) {
+    std::size_t min = std::numeric_limits<std::size_t>::max();
+    coord = {0, 0};
+
+    for (std::size_t i = 0; i < graph.AmountOfVertices(); ++i) {
+      if (used_vertices[i]) {
+        for (std::size_t j = 0; j < graph.AmountOfVertices(); ++j) {
+          std::size_t edge_cost = graph.HasEdge(i, j);
+          if (!used_vertices[j] && edge_cost != 0) {
+            if (min > edge_cost) {
+              min = edge_cost;
+              coord = {i, j};
+            }
+          }
+        }
+      }
+    }
+    adjacency_matrix(coord.first, coord.second) = static_cast<int>(min);
+    adjacency_matrix(coord.second, coord.first) = static_cast<int>(min);
+    used_vertices[coord.second] = true;
+  }
+
+  return adjacency_matrix;
+}
+
 }  // namespace s21
