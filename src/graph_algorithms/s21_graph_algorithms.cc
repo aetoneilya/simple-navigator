@@ -126,9 +126,9 @@ int GraphAlgoritms::getShortestPathBetweenVertices(Graph& graph, int vertex1,
 
   int curVertex = vertex1 - 1;
   shotrestPathsToVert[curVertex] = 0;
-  verticeVisited[curVertex] = true;
 
   while (curVertex != kUndefined && curVertex != vertex2 - 1) {
+    verticeVisited[curVertex] = true;
     for (size_t i = 0; i < graph.AmountOfVertices(); i++) {
       if (verticeVisited[i] == true || graph(curVertex, i) == 0) {
         continue;
@@ -150,7 +150,6 @@ int GraphAlgoritms::getShortestPathBetweenVertices(Graph& graph, int vertex1,
       if (curVertex == kUndefined ||
           shotrestPathsToVert[i] < shotrestPathsToVert[curVertex]) {
         curVertex = (int)i;
-        verticeVisited[curVertex] = true;
       }
     }
   }
