@@ -33,7 +33,8 @@ tsm::TsmResult GraphAlgoritms::NaiveSolveTravelingSalesmanProblem(
   return best_result;
 }
 
-tsm::TsmResult NearestNeighborSolveTravelingSalesmanProblem(Graph& graph) {
+tsm::TsmResult GraphAlgoritms::NearestNeighborSolveTravelingSalesmanProblem(
+    Graph& graph) {
   tsm::TsmResult best_result;
   best_result.distance = INFINITY;
 
