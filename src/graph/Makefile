@@ -2,7 +2,7 @@ CXX=g++
 CXXFLAGS=-c -pedantic -Wall -Wextra -Wshadow -Wconversion -Wunreachable-code -std=c++17
 LDFLAGS=-lm
 
-DEBUG ?= 0
+DEBUG ?= 1
 
 ifeq ($(DEBUG),1)
 	CXXFLAGS+=-g
