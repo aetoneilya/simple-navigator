@@ -118,7 +118,13 @@ int main() {
         }
         break;
       case s21::Mode::kShortestPathsBetweenAllPairsOfVertices:
-        // TODO implement
+        matrix = algs.getShortestPathsBetweenAllVertices(graph);
+        for (std::size_t i = 0; i < matrix.GetRows(); i++) {
+          for (std::size_t j = 0; j < matrix.GetColumns() - 1; j++) {
+            std::cout << matrix.operator()(i, j) << " ";
+          }
+          std::cout << matrix.operator()(i, matrix.GetColumns() - 1) << "\n";
+        }
         break;
       case s21::Mode::kMinimumSpanningTree:
         matrix = algs.getLeastSpanningTree(graph);

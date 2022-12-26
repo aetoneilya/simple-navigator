@@ -157,6 +157,36 @@ int GraphAlgoritms::getShortestPathBetweenVertices(Graph& graph, int vertex1,
   return shotrestPathsToVert[vertex2 - 1];
 }
 
+Matrix GraphAlgoritms::getShortestPathsBetweenAllVertices(Graph& graph) {
+  Matrix result(graph.AmountOfVertices(), graph.AmountOfVertices());
+
+  for (size_t i = 0; i < graph.AmountOfVertices(); i++) {
+    for (size_t j = 0; j < graph.AmountOfVertices(); j++) {
+      if (graph(i, j) == 0 && i != j) {
+        result(i, j) = kUndefined;
+      } else {
+        result(i, j) = graph(i, j);
+      }
+    }
+  }
+
+  for (size_t k = 0; k < graph.AmountOfVertices(); k++) {
+    for (size_t i = 0; i < graph.AmountOfVertices(); i++) {
+      for (size_t j = 0; j < graph.AmountOfVertices(); j++) {
+        if (result(i, k) != kUndefined && result(k, j) != kUndefined) {
+          if (result(i, j) != kUndefined) {
+            result(i, j) = std::min(result(i, j), result(i, k) + result(k, j));
+          } else {
+            result(i, j) = result(i, k) + result(k, j);
+          }
+        }
+      }
+    }
+  }
+
+  return result;
+}
+
 Matrix GraphAlgoritms::getLeastSpanningTree(Graph& graph) {
   Matrix adjacency_matrix(graph.AmountOfVertices(), graph.AmountOfVertices());
 

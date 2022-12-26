@@ -22,6 +22,7 @@ class GraphAlgoritms {
   std::vector<int> depthFirstSearch(Graph& graph, int startVertex);
   std::vector<int> breadthFirstSearch(Graph& graph, int startVertex);
   int getShortestPathBetweenVertices(Graph& graph, int vertex1, int vertex2);
+  Matrix getShortestPathsBetweenAllVertices(Graph& graph);
 
   Matrix getLeastSpanningTree(Graph& graph);
 
