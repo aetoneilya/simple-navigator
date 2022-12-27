@@ -2,7 +2,7 @@ CXX=g++
 CXXFLAGS=-c -pedantic -Wall -Wextra -Wshadow -Wconversion -Wunreachable-code -std=c++17
 LDFLAGS=-lm
 
-DEBUG ?= 1
+DEBUG ?= 0
 
 ifeq ($(DEBUG),1)
 	CXXFLAGS+=-g
@@ -26,7 +26,7 @@ build: $(STATICLIB)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm -rf *.o $(EXECUTABLE) $(STATICLIB)
+	rm -rf $(OBJ) $(EXECUTABLE) $(STATICLIB)
 
 rebuild: clean all
 

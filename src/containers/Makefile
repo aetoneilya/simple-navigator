@@ -26,7 +26,7 @@ build: $(STATICLIB)
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
 clean:
-	rm -rf *.o $(EXECUTABLE) $(STATICLIB)
+	rm -rf $(OBJ) $(EXECUTABLE) $(STATICLIB)
 
 rebuild: clean all
 
