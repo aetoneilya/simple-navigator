@@ -39,69 +39,46 @@ void AntColony::SimulateAnts(
 
   const int number_of_cities = (int)graph.AmountOfVertices();
   int ant_num = 0;
+  int current_city;
 
   for (Ant& ant : ant_colony) {
     std::vector<bool> visited(number_of_cities, false);
-    int current_city = ant_num % number_of_cities;
+    current_city = ant_num % number_of_cities;
     ant.path[0] = current_city;
 
-    for (int step = 1; step <= number_of_cities; step++) {
+    for (int step = 1; step < number_of_cities; step++) {
       visited[current_city] = true;
       double atraction_sum = 0;
-      std::vector<double> cities_attraction(number_of_cities);
 
-      // build attraction map
+      //   build attraction map
+      std::vector<double> cities_attraction(number_of_cities, 0);
       for (int city_to = 0; city_to < number_of_cities; city_to++) {
-        //! very dangerous part of algorithm undefined behaviour
-        cities_attraction[city_to] =
-            !visited[city_to]
-                ? Antraction(graph, pheromone, current_city, city_to)
-                : 0;
-        // SAFE variant
-        // cities_attraction[city_to] =
-        //     graph.has_edge(current_city, city_to) != 0 && !visited[city_to]
-        //         ? antraction(graph, pheromone, current_city, city_to)
-        //         : 0;
+        if (!visited[city_to])
+          cities_attraction[city_to] =
+              Antraction(graph, pheromone, current_city, city_to);
 
         atraction_sum += cities_attraction[city_to];
       }
 
-      //   std::cout << "visited: ";
-      //   for (auto a : visited) {
-      //     std::cout << a << ' ';
-      //   }
-      //   std::cout << "\t";
+      if (atraction_sum == 0) std::cout << "error\n";
 
-      //   std::cout << "atrcn og: ";
-      //   for (auto a : cities_attraction) {
-      //     std::cout << a << ' ';
-      //   }
-      //   std::cout << "\t";
+        cities_attraction[0] = cities_attraction[0] / atraction_sum;
+        for (int c = 1; c < number_of_cities; c++)
+          cities_attraction[c] =
+              cities_attraction[c - 1] + cities_attraction[c] /
+              atraction_sum;
 
-      cities_attraction[0] = cities_attraction[0] / atraction_sum;
-      for (int c = 1; c < number_of_cities; c++)
-        cities_attraction[c] =
-            cities_attraction[c - 1] + cities_attraction[c] / atraction_sum;
+        double ant_choise = dis(rd);
+        int city_to = 0;
+        while (ant_choise > cities_attraction[city_to]) city_to++;
 
-      double ant_choise = dis(rd);
-      int city_to = 0;
-      while (ant_choise > cities_attraction[city_to]) city_to++;
+        ant.distance += graph(current_city, city_to);
 
-      //   std::cout << "atrcn ";
-      //   for (auto a : cities_attraction) {
-      //     std::cout << a << ' ';
-      //   }
-      //   std::cout << std::endl;
-
-      ant.distance += graph(current_city, city_to);
-
-      ant.path[step] = city_to;
-      current_city = city_to;
+        ant.path.at(step) = city_to;
+        current_city = city_to;
     }
     ant.distance += graph(ant.path.back(), ant.path.front());
     ant_num++;
-
-    // PrintAnt(ant);
   }
 }
 
