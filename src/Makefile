@@ -4,7 +4,7 @@ CXX=g++
 CXXFLAGS=-c -pedantic -Wall -Wextra -Wshadow -Wconversion -Wunreachable-code -std=c++17
 LDFLAGS=-lm -lpthread
 
-DEBUG ?= 0
+DEBUG ?= 1
 
 ifeq ($(DEBUG),1)
 	CXXFLAGS+=-g
@@ -25,7 +25,7 @@ MATRIXLIBSRCDIR=matrix
 
 MAINSRC=main.cc
 MAINOBJ=$(MAINSRC:.cc=.o)
-TESTSRC=tests.cc
+TESTSRC=test.cc
 TESTOBJ=$(TESTSRC:.cc=.o)
 SRC=$(filter-out ./$(MAINSRC) ./$(TESTSRC), $(shell find . -type f -name "*.cc" -not -path "./$(CONTAINERSLIBSRCDIR)/*" -not -path "./$(GRAPHLIBSRCDIR)/*" -not -path "./$(ALGLIBSRCDIR)/*" -not -path "./$(MATRIXLIBSRCDIR)/*"))
 OBJ=$(SRC:.cc=.o)
@@ -35,7 +35,7 @@ EXECUTABLE=result_file
 LCOVEXEC=$(EXECUTABLE).info
 REPORTDIR=report
 
-.PHONY: all build run tests gcov_report style cpplint leaks clean rebuild
+.PHONY: all build run test gcov_report style cpplint leaks clean rebuild
 
 all: run
 
@@ -64,14 +64,17 @@ $(MATRIXSTATICLIB):
 	cd $(MATRIXLIBSRCDIR) && \
 	make $(MATRIXSTATICLIB)
 
-tests: LDFLAGS+=-lgtest
-tests: $(TESTOBJ) $(OBJ) $(CONTAINERSSTATICLIB) $(GRAPHSTATICLIB) $(ALGSTATICLIB) $(MATRIXSTATICLIB)
-	$(CXX) $^ -o $(EXECUTABLE) $(LDFLAGS)
+test: LDFLAGS+=-lgtest
+test: $(TESTOBJ) $(OBJ) $(CONTAINERSSTATICLIB) $(GRAPHSTATICLIB) $(ALGSTATICLIB) $(MATRIXSTATICLIB) 
+	$(CXX) $(TESTOBJ) $(OBJ) \
+	$(CONTAINERSLIBSRCDIR)/$(CONTAINERSSTATICLIB) $(GRAPHLIBSRCDIR)/$(GRAPHSTATICLIB) \
+	$(ALGLIBSRCDIR)/$(ALGSTATICLIB) $(MATRIXLIBSRCDIR)/$(MATRIXSTATICLIB) \
+	-o $(EXECUTABLE) $(LDFLAGS)
 	./$(EXECUTABLE)
 
 gcov_report: CXXFLAGS+=--coverage
 gcov_report: LDFLAGS+=--coverage
-gcov_report: tests
+gcov_report: test
 	lcov -t $(EXECUTABLE) -o $(LCOVEXEC) -c -d .
 	lcov -r $(LCOVEXEC) "/usr*" -o $(LCOVEXEC)
 	genhtml -o $(REPORTDIR) $(LCOVEXEC)
