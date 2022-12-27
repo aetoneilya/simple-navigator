@@ -61,6 +61,9 @@ std::size_t Graph::AmountOfVertices() const { return adj_matrix_->GetRows(); }
 
 void Graph::LoadGraphFromFile(const std::string& filename) {
   std::ifstream infile(filename);
+  if (infile.is_open() == false) {
+    throw std::runtime_error("Could not open file");
+  }
   std::size_t amount_of_vertices;
   infile >> amount_of_vertices;
   adj_matrix_ =
@@ -70,10 +73,35 @@ void Graph::LoadGraphFromFile(const std::string& filename) {
       infile >> adj_matrix_->operator()(i, j);
     }
   }
+  infile.close();
 }
 
 void Graph::ExportGraphToDot(const std::string& filename) {
-  static_cast<void>(filename);
+  std::ofstream outfile(filename);
+  if (outfile.is_open() == false) {
+    throw std::runtime_error("Could not open file");
+  }
+  std::string edge_type = "--";
+  for (size_t i = 0; i < AmountOfVertices(); i++) {
+    for (size_t j = i; j < AmountOfVertices(); j++) {
+      if (adj_matrix_->operator()(i, j) != adj_matrix_->operator()(j, i)) {
+        edge_type = "->";
+        break;
+      }
+    }
+  }
+  outfile << "graph graphname {\n";
+  for (size_t i = 0; i < AmountOfVertices(); i++) {
+    size_t j = (edge_type == "--") ? i : 0;
+    for (; j < AmountOfVertices(); j++) {
+      if (adj_matrix_->operator()(i, j) != 0) {
+        outfile << "\tv" << i + 1 << " " << edge_type << " "
+                << "v" << j + 1 << ";\n";
+      }
+    }
+  }
+  outfile << "}\n";
+  outfile.close();
 }
 
 void Graph::Draw() const {
