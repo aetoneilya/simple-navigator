@@ -96,7 +96,6 @@ int main() {
         }
         break;
       case s21::Mode::kShortestPathBetweenTwoArbitraryVertices:
-        // TODO merge fix
         if (graph.AmountOfVertices()) {
           std::cout << "Enter first vertex (from 1 to "
                     << graph.AmountOfVertices() << "): ";
@@ -136,7 +135,6 @@ int main() {
         }
         break;
       case s21::Mode::kTravelingSalesmanProblem:
-        // TODO bug fix
         if (graph.AmountOfVertices()) {
           tsm_result = algs.SolveTravelingSalesmanProblem(graph);
           std::cout << "Distance: " << tsm_result.distance << "\n";
