@@ -26,7 +26,7 @@ class AntColony {
     double distance;
 
     explicit Ant(int number_of_cities)
-        : path(number_of_cities, -1), distance(0) {}
+        : path(number_of_cities, 0), distance(0) {}
   };
 
   const double alpha = 1;

@@ -38,8 +38,8 @@ void AntColony::SimulateAnts(
   std::uniform_real_distribution<> dis(0.0, 1.0);
 
   const int number_of_cities = (int)graph.AmountOfVertices();
-  int ant_num = 0;
 
+  int ant_num = 0;
   for (Ant& ant : ant_colony) {
     int current_city;
     std::vector<bool> visited(number_of_cities, false);
@@ -53,30 +53,39 @@ void AntColony::SimulateAnts(
       //   build attraction map
       std::vector<double> cities_attraction(number_of_cities, 0);
       for (int city_to = 0; city_to < number_of_cities; city_to++) {
-        if (!visited[city_to])
+        double distance = (double)graph(current_city, city_to);
+        if (!visited[city_to] && distance != 0) {
+          double proximity = 1.0 / distance;
           cities_attraction[city_to] =
-              Antraction(graph, pheromone, current_city, city_to);
+              pow(pheromone[current_city][city_to], alpha) *
+              pow((proximity), beta);
+        }
 
         atraction_sum += cities_attraction[city_to];
       }
 
-      if (atraction_sum == 0) std::cout << "error\n";
+      if (atraction_sum != 0) {
+        cities_attraction[0] = cities_attraction[0] / atraction_sum;
+        for (int c = 1; c < number_of_cities; c++)
+          cities_attraction[c] =
+              cities_attraction[c - 1] + cities_attraction[c] / atraction_sum;
 
-      cities_attraction[0] = cities_attraction[0] / atraction_sum;
-      for (int c = 1; c < number_of_cities; c++)
-        cities_attraction[c] =
-            cities_attraction[c - 1] + cities_attraction[c] / atraction_sum;
+        double ant_choise = dis(rd);
+        int city_to = 0;
+        while (ant_choise > cities_attraction[city_to]) city_to++;
 
-      double ant_choise = dis(rd);
-      int city_to = 0;
-      while (ant_choise > cities_attraction[city_to]) city_to++;
+        ant.distance += graph(current_city, city_to);
 
-      ant.distance += graph(current_city, city_to);
-
-      ant.path.at(step) = city_to;
-      current_city = city_to;
+        ant.path.at(step) = city_to;
+        current_city = city_to;
+      } else {
+        ant.distance = INFINITY;
+        break;
+      }
     }
-    ant.distance += graph(ant.path.back(), ant.path.front());
+
+    int back_path = graph(ant.path.at(0), ant.path.at(number_of_cities - 1));
+    ant.distance += back_path == 0 ? INFINITY : (double)back_path;
     ant_num++;
   }
 }
@@ -107,13 +116,6 @@ void AntColony::UpdateBestPath(const std::vector<Ant>& ant_colony,
       best_path.distance = ant.distance;
       //   PrintAnt(ant);
     }
-}
-
-double AntColony::Antraction(const Graph& graph,
-                             const std::vector<std::vector<double>>& pheromone,
-                             int from, int to) {
-  double proximity = 1.0 / (double)graph(from, to);
-  return ((pow(pheromone[from][to], alpha) * pow((proximity), beta)));
 }
 
 }  // namespace tsm

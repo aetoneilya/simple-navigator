@@ -17,15 +17,17 @@ tsm::TsmResult GraphAlgoritms::NaiveSolveTravelingSalesmanProblem(
   best_result.distance = INFINITY;
 
   tsm::TsmResult temp;
-  for (size_t i = 0; i < number_of_cities; i++) {
-    temp.vertices.push_back((int)i);
-  }
+  for (size_t i = 0; i < number_of_cities; i++) temp.vertices.push_back((int)i);
 
   do {
     temp.distance = 0;
-    for (size_t i = 0; i < number_of_cities; i++)
-      temp.distance +=
+    for (size_t i = 0; i < number_of_cities; i++) {
+      double distance =
           graph(temp.vertices[i], temp.vertices[(i + 1) % number_of_cities]);
+      if (distance == 0) distance = INFINITY;
+
+      temp.distance += distance;
+    }
 
     if (temp.distance < best_result.distance) best_result = temp;
   } while (std::next_permutation(temp.vertices.begin(), temp.vertices.end()));
@@ -40,29 +42,42 @@ tsm::TsmResult GraphAlgoritms::NearestNeighborSolveTravelingSalesmanProblem(
 
   size_t number_of_cities = graph.AmountOfVertices();
 
-  for (size_t i = 0; i < number_of_cities; i++) {
+  for (size_t city_from = 0; city_from < number_of_cities; city_from++) {
+    int current_city = (int)city_from;
     tsm::TsmResult temp;
+    temp.distance = 0;
     temp.vertices.resize(number_of_cities);
-    temp.vertices[0] = (int)i;
+    temp.vertices[0] = current_city;
 
-    std::vector<int> visited(number_of_cities);
+    std::vector<bool> visited(number_of_cities, false);
+    visited[current_city] = true;
 
     for (size_t j = 1; j < number_of_cities; j++) {
-      int nearestness = graph(j - 1, 0);
-      int nearest = 0;  // find nearest city to graph[jkUndefined]
+      int nearestness = __INT_MAX__;
+      int nearest = -1;
 
       for (size_t k = 0; k < number_of_cities; k++) {
-        if (graph(j - 1, k) < nearestness && !visited[k]) {
-          nearestness = graph(j - 1, k);
+        if (graph(current_city, k) < nearestness &&
+            graph(current_city, k) != 0 && !visited[k]) {
+          nearestness = graph(current_city, k);
           nearest = (int)k;
         }
       }
 
-      temp.vertices[j] = nearest;
-      temp.distance += graph(temp.vertices[j - 1], temp.vertices[j]);
+      if (nearest != -1) {
+        temp.vertices[j] = nearest;
+        temp.distance += graph(current_city, nearest);
+        current_city = nearest;
+        visited[current_city] = true;
+      } else {
+        temp.distance = INFINITY;
+        //TODO break?
+      }
     }
 
-    temp.distance += graph(temp.vertices.front(), temp.vertices.back());
+    int back_path =
+        graph(temp.vertices[0], temp.vertices[number_of_cities - 1]);
+    temp.distance += back_path == 0 ? INFINITY : (double)back_path;
 
     if (temp.distance < best_result.distance) best_result = temp;
   }
