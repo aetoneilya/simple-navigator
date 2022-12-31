@@ -25,7 +25,7 @@ MATRIXLIBSRCDIR=matrix
 
 MAINSRC=main.cc
 MAINOBJ=$(MAINSRC:.cc=.o)
-TESTSRC=test.cc
+TESTSRC=tests/test.cc
 TESTOBJ=$(TESTSRC:.cc=.o)
 SRC=$(filter-out ./$(MAINSRC) ./$(TESTSRC), $(shell find . -type f -name "*.cc" -not -path "./$(CONTAINERSLIBSRCDIR)/*" -not -path "./$(GRAPHLIBSRCDIR)/*" -not -path "./$(ALGLIBSRCDIR)/*" -not -path "./$(MATRIXLIBSRCDIR)/*"))
 OBJ=$(SRC:.cc=.o)
