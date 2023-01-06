@@ -11,7 +11,7 @@ void validate_path(const s21::tsm::TsmResult& res, const s21::Graph& graph) {
         graph(res.vertices[i], res.vertices[(i + 1) % number_of_cities]);
 
     total_distance += distance;
-    EXPECT_FALSE(distance == 0);
+    EXPECT_NE(distance, 0);
   }
 
   EXPECT_DOUBLE_EQ(res.distance, total_distance);
