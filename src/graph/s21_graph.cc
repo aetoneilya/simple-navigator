@@ -35,27 +35,27 @@ const int& Graph::operator()(std::size_t i, std::size_t j) const {
 
 void Graph::Swap(Graph* other) { std::swap(adj_matrix_, other->adj_matrix_); }
 
-void Graph::AddEdge(std::size_t i, std::size_t j) {
-  adj_matrix_->operator()(i, j) = 1;
-  adj_matrix_->operator()(j, i) = 1;
-}
+// void Graph::AddEdge(std::size_t i, std::size_t j) {
+//   adj_matrix_->operator()(i, j) = 1;
+//   adj_matrix_->operator()(j, i) = 1;
+// }
 
-void Graph::AddEdge(std::size_t from, std::size_t to, int weight) {
-  adj_matrix_->operator()(from, to) = weight;
-}
+// void Graph::AddEdge(std::size_t from, std::size_t to, int weight) {
+//   adj_matrix_->operator()(from, to) = weight;
+// }
 
-void Graph::RemoveEdge(std::size_t i, std::size_t j) {
-  adj_matrix_->operator()(i, j) = 0;
-  adj_matrix_->operator()(j, i) = 0;
-}
+// void Graph::RemoveEdge(std::size_t i, std::size_t j) {
+//   adj_matrix_->operator()(i, j) = 0;
+//   adj_matrix_->operator()(j, i) = 0;
+// }
 
-void Graph::RemoveOneWayEdge(std::size_t from, std::size_t to) {
-  adj_matrix_->operator()(from, to) = 0;
-}
+// void Graph::RemoveOneWayEdge(std::size_t from, std::size_t to) {
+//   adj_matrix_->operator()(from, to) = 0;
+// }
 
-int Graph::HasEdge(std::size_t from, std::size_t to) const {
-  return adj_matrix_->operator()(from, to);
-}
+// int Graph::HasEdge(std::size_t from, std::size_t to) const {
+//   return adj_matrix_->operator()(from, to);
+// }
 
 std::size_t Graph::AmountOfVertices() const { return adj_matrix_->GetRows(); }
 
@@ -81,22 +81,21 @@ void Graph::ExportGraphToDot(const std::string& filename) {
   if (outfile.is_open() == false) {
     throw std::runtime_error("Could not open file");
   }
-  std::string edge_type = "--";
+  std::string edge_type = " -- ";
   for (size_t i = 0; i < AmountOfVertices(); i++) {
     for (size_t j = i; j < AmountOfVertices(); j++) {
       if (adj_matrix_->operator()(i, j) != adj_matrix_->operator()(j, i)) {
-        edge_type = "->";
+        edge_type = " -> ";
         break;
       }
     }
   }
   outfile << "graph graphname {\n";
   for (size_t i = 0; i < AmountOfVertices(); i++) {
-    size_t j = (edge_type == "--") ? i : 0;
+    size_t j = (edge_type == " -- ") ? i : 0;
     for (; j < AmountOfVertices(); j++) {
       if (adj_matrix_->operator()(i, j) != 0) {
-        outfile << "\tv" << i + 1 << " " << edge_type << " "
-                << "v" << j + 1 << ";\n";
+        outfile << "\tv" << i + 1 << edge_type << "v" << j + 1 << ";\n";
       }
     }
   }
@@ -104,14 +103,14 @@ void Graph::ExportGraphToDot(const std::string& filename) {
   outfile.close();
 }
 
-void Graph::Draw() const {
-  std::cout << adj_matrix_->GetRows() << "\n";
-  for (std::size_t i = 0; i < adj_matrix_->GetRows(); i++) {
-    for (std::size_t j = 0; j < adj_matrix_->GetColumns(); j++) {
-      std::cout << adj_matrix_->operator()(i, j) << " ";
-    }
-    std::cout << "\n";
-  }
-}
+// void Graph::Draw() const {
+//   std::cout << adj_matrix_->GetRows() << "\n";
+//   for (std::size_t i = 0; i < adj_matrix_->GetRows(); i++) {
+//     for (std::size_t j = 0; j < adj_matrix_->GetColumns(); j++) {
+//       std::cout << adj_matrix_->operator()(i, j) << " ";
+//     }
+//     std::cout << "\n";
+//   }
+// }
 
 }  // namespace s21

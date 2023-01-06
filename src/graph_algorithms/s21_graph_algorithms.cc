@@ -71,7 +71,7 @@ tsm::TsmResult GraphAlgoritms::NearestNeighborSolveTravelingSalesmanProblem(
         visited[current_city] = true;
       } else {
         temp.distance = INFINITY;
-        //TODO break?
+        // TODO break?
       }
     }
 
@@ -216,7 +216,7 @@ Matrix GraphAlgoritms::getLeastSpanningTree(Graph& graph) {
     for (std::size_t i = 0; i < graph.AmountOfVertices(); ++i) {
       if (used_vertices[i]) {
         for (std::size_t j = 0; j < graph.AmountOfVertices(); ++j) {
-          std::size_t edge_cost = graph.HasEdge(i, j);
+          std::size_t edge_cost = graph(i, j);
           if (!used_vertices[j] && edge_cost != 0) {
             if (min > edge_cost) {
               min = edge_cost;
