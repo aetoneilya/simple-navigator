@@ -72,13 +72,6 @@ test: $(TESTOBJ) $(OBJ) $(CONTAINERSSTATICLIB) $(GRAPHSTATICLIB) $(ALGSTATICLIB)
 	-o $(EXECUTABLE) $(LDFLAGS)
 	./$(EXECUTABLE)
 
-gcov_report: CXXFLAGS+=--coverage
-gcov_report: LDFLAGS+=--coverage
-gcov_report: clean test
-	lcov -t $(EXECUTABLE) -o $(LCOVEXEC) -c -d .
-	lcov -r $(LCOVEXEC) "/usr*" -o $(LCOVEXEC)
-	genhtml -o $(REPORTDIR) $(LCOVEXEC)
-
 %.o: %.cc
 	$(CXX) $(CXXFLAGS) $^ -o $@
 
