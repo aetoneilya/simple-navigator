@@ -438,8 +438,6 @@ void RBTree<T, _Cmp>::clear() {
 template <class T, typename _Cmp>
 std::pair<typename RBTree<T, _Cmp>::iterator, bool> RBTree<T, _Cmp>::insert(
     const RBTree<T, _Cmp>::value_type &value) {
-  /*  insetrion algorithm described here:
-   * https://www.youtube.com/watch?v=UaLIHuR1t8Q  */
   bool result = true;
   _Node *new_node = new _Node(value);
   new_node->make_red();

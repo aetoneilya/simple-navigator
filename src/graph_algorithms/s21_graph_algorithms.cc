@@ -71,7 +71,6 @@ tsm::TsmResult GraphAlgoritms::NearestNeighborSolveTravelingSalesmanProblem(
         visited[current_city] = true;
       } else {
         temp.distance = INFINITY;
-        // TODO break?
       }
     }
 

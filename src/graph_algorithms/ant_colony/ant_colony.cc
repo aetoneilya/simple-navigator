@@ -50,7 +50,6 @@ void AntColony::SimulateAnts(
       visited[current_city] = true;
       double atraction_sum = 0;
 
-      //   build attraction map
       std::vector<double> cities_attraction(number_of_cities, 0);
       for (int city_to = 0; city_to < number_of_cities; city_to++) {
         double distance = (double)graph(current_city, city_to);

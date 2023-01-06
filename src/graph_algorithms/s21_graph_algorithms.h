@@ -28,8 +28,6 @@ class GraphAlgoritms {
 
  private:
   const int kUndefined = -1;
-  //   tsm::TsmResult naiveRecursion(Graph& graph, size_t visited_mask, int
-  //   current_city, int start_city);
 };
 
 }  // namespace s21

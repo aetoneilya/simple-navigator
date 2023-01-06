@@ -2,7 +2,6 @@
 #define SRC_GRAPH_S21_GRAPH_H_
 
 #include <fstream>
-#include <iostream>  // TODO(ppoutine) Remove in prod
 #include <memory>
 #include <string>
 
@@ -25,19 +24,10 @@ class Graph {
 
   void Swap(Graph* other);
 
-  // void AddEdge(std::size_t i, std::size_t j);
-  // void AddEdge(std::size_t from, std::size_t to, int weight);
-  // void RemoveEdge(std::size_t i, std::size_t j);
-  // void RemoveOneWayEdge(std::size_t from, std::size_t to);
-
-  // int HasEdge(std::size_t from, std::size_t to) const;
-
   std::size_t AmountOfVertices() const;
 
   void LoadGraphFromFile(const std::string& filename);
   void ExportGraphToDot(const std::string& filename);
-
-  // void Draw() const;
 
  private:
   std::shared_ptr<Matrix> adj_matrix_;
