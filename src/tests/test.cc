@@ -227,7 +227,7 @@ TEST(getLeastSpanningTree, test_1) {
   }
 }
 
-TEST(travelingSalesmanProblem, naiveSolve) {
+TEST(travelingSalesmanProblem, naiveSolve_1) {
   s21::Graph my_graph;
   my_graph.LoadGraphFromFile("tests/test_graph_2.txt");
   s21::GraphAlgoritms ga;
@@ -237,7 +237,7 @@ TEST(travelingSalesmanProblem, naiveSolve) {
   validate_path(res, my_graph);
 }
 
-TEST(travelingSalesmanProblem, nearestNeighbor) {
+TEST(travelingSalesmanProblem, nearestNeighbor_1) {
   s21::Graph my_graph;
   my_graph.LoadGraphFromFile("tests/test_graph_2.txt");
   s21::GraphAlgoritms ga;
@@ -248,7 +248,7 @@ TEST(travelingSalesmanProblem, nearestNeighbor) {
   validate_path(res, my_graph);
 }
 
-TEST(travelingSalesmanProblem, antColony) {
+TEST(travelingSalesmanProblem, antColony_1) {
   s21::Graph my_graph;
   my_graph.LoadGraphFromFile("tests/test_graph_2.txt");
   s21::GraphAlgoritms ga;
@@ -257,7 +257,37 @@ TEST(travelingSalesmanProblem, antColony) {
   validate_path(res, my_graph);
 }
 
-TEST(travelingSalesmanProblem, naiveSolve_nopath) {
+TEST(travelingSalesmanProblem, naiveSolve_2) {
+  s21::Graph my_graph;
+  my_graph.LoadGraphFromFile("tests/test_graph_3.txt");
+  s21::GraphAlgoritms ga;
+  s21::tsm::TsmResult res = ga.NaiveSolveTravelingSalesmanProblem(my_graph);
+
+  EXPECT_DOUBLE_EQ(res.distance, 7.);
+  validate_path(res, my_graph);
+}
+
+TEST(travelingSalesmanProblem, nearestNeighbor_2) {
+  s21::Graph my_graph;
+  my_graph.LoadGraphFromFile("tests/test_graph_3.txt");
+  s21::GraphAlgoritms ga;
+  s21::tsm::TsmResult res =
+      ga.NearestNeighborSolveTravelingSalesmanProblem(my_graph);
+
+  EXPECT_DOUBLE_EQ(res.distance, 7.);
+  validate_path(res, my_graph);
+}
+
+TEST(travelingSalesmanProblem, antColony_2) {
+  s21::Graph my_graph;
+  my_graph.LoadGraphFromFile("tests/test_graph_3.txt");
+  s21::GraphAlgoritms ga;
+  s21::tsm::TsmResult res = ga.SolveTravelingSalesmanProblem(my_graph);
+
+  validate_path(res, my_graph);
+}
+
+TEST(travelingSalesmanProblem, naiveSolve_no_path) {
   s21::Graph my_graph;
   my_graph.LoadGraphFromFile("tests/empty_graph.txt");
   s21::GraphAlgoritms ga;
@@ -266,7 +296,7 @@ TEST(travelingSalesmanProblem, naiveSolve_nopath) {
   EXPECT_DOUBLE_EQ(res.distance, INFINITY);
 }
 
-TEST(travelingSalesmanProblem, nearestNeighbor_nopath) {
+TEST(travelingSalesmanProblem, nearestNeighbor_no_path) {
   s21::Graph my_graph;
   my_graph.LoadGraphFromFile("tests/empty_graph.txt");
   s21::GraphAlgoritms ga;
@@ -276,7 +306,7 @@ TEST(travelingSalesmanProblem, nearestNeighbor_nopath) {
   EXPECT_DOUBLE_EQ(res.distance, INFINITY);
 }
 
-TEST(travelingSalesmanProblem, antColony_nopath) {
+TEST(travelingSalesmanProblem, antColony_no_path) {
   s21::Graph my_graph;
   my_graph.LoadGraphFromFile("tests/empty_graph.txt");
   s21::GraphAlgoritms ga;
